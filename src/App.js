@@ -13,8 +13,7 @@ function App() {
 
   useEffect(() => {
     let oldTasks = JSON.parse(localStorage.getItem("task"));
-    !oldTasks.length 
-      ? localStorage.setItem("task", JSON.stringify([])):
+    !oldTasks ? localStorage.setItem("task", JSON.stringify([])):
       setTaskList(oldTasks)
   }, []);
 
