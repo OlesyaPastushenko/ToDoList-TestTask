@@ -12,10 +12,9 @@ function App() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    let oldTasks = JSON.parse(localStorage.getItem("task"));
-    oldTasks.length > 0
-      ? setTaskList(oldTasks)
-      : localStorage.setItem("task", JSON.stringify([]));
+    !oldTasks.length 
+      ? localStorage.setItem("task", JSON.stringify([])):
+      setTaskList(JSON.parse(localStorage.getItem("task")))
   }, []);
 
   const onClearAll = () => {
