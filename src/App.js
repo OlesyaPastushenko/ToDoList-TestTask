@@ -1,69 +1,103 @@
-import React,{ useState, useEffect } from 'react';
-import './App.css';
-import MyButton from './components/MyButton';
-import MyInput from './components/MyInput';
-import TaskList from './components/TaskList';
-import Header from './components/Header';
-
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import TaskList from "./components/TaskList";
+import Modal from "./components/Modal";
 
 function App() {
-  const [currentUserName, setCurrentUserName] = useState('')
-  const [task, setTask] = useState('')
-  const [taskList, setTaskList] = useState([])
-  const [userName, setUserName] = useState('')
-  const addNewTask = () => {
+  const [task, setTask] = useState("");
+  const [title, setTitle] = useState("");
+  const [taskList, setTaskList] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [modalObj, seModalObj] = useState([]);
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let oldTasks = JSON.parse(localStorage.getItem("task"));
+    oldTasks.length > 0
+      ? setTaskList(oldTasks)
+      : localStorage.setItem("task", JSON.stringify([]));
+  }, []);
+
+  const onClearAll = () => {
+    setTaskList([]);
+  };
+
+  const addNewTask = (e) => {
+    e.preventDefault();
+    if (title.trim().length > 0 && task.trim().length > 0) { 
     const NewTask = {
       id: Date.now(),
-      title: task,
+      title: title,
+      task: task,
       done: false,
-      name: userName
-    }
-    setTaskList([...taskList, NewTask])
-    setTask('')
-    localStorage.setItem('task',JSON.stringify(taskList))
+    };
+    setTaskList([...taskList, NewTask]);
+    setTask("");
+    setTitle("");
+    localStorage.setItem("task", JSON.stringify(taskList));
+  } else {
+     setError("The filds should not be empty!")
   }
+  };
 
+  const openModal = (id) => {
+    setModal(true);
+    const obj = taskList.filter((el) => el.id === id);
+    seModalObj(obj[0]);
+  };
 
-  
+  const onCloseModal = () => {
+    setModal(false);
+  };
 
-
-  const checkName = () => {
-    let curUserName = localStorage.getItem('name')
-    console.log(curUserName)
-    if (curUserName===userName) {setCurrentUserName(curUserName)
-    setTaskList(JSON.parse(localStorage.getItem('task')))}
-    else {
-    setCurrentUserName(userName)
-    localStorage.setItem('name', userName)
-    localStorage.setItem('task', [])
-    setTaskList([])
-  }
-  }
-
-  
-    return (
-      <div>
-        <Header cName = {currentUserName}></Header>
-      <div>
-        <MyInput placeholder = "What's your name, darling?"
-        className = "input" 
-        type='text' 
-        value = {userName} 
-        onChange = {(e) => setUserName(e.target.value)}
-        ></MyInput>
-        <MyButton onClick = {checkName}>Register</MyButton>
+  return (
+    <div className="wrap">
+      <form className="form" onSubmit={addNewTask}>
+        <input
+          onFocus={()=> setError('')}
+          required
+          placeholder="What's your task title?"
+          className="input"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input
+          onFocus={()=> setError('')}
+          required
+          placeholder="What's your task today?"
+          className="input"
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+        />
+        <input
+          className="button"
+          type="submit"
+          onSubmit={addNewTask}
+          value="Add task"
+        />
+      </form>
+      <div className="clearWrap">
+        <p>{error}</p>
+        <button className="button" onClick={onClearAll}>
+          Clear all
+        </button>
       </div>
-      <div>
-        <MyInput placeholder = 'Is there any job to do today?' 
-        className = "input" 
-        type='text' 
-        value = {task} 
-        onChange = {(e)=>setTask(e.target.value)}/>
-        <MyButton onClick = {addNewTask}>Add Task</MyButton>
-        </div>
-        <TaskList taskList = {taskList} changeTaskList = {setTaskList}/>
+      <div className="table">
+        <span>ID/number</span>
+        <span>Title</span>
+        <span>Description</span>
+        <span>Status</span>
       </div>
-    )
+      <TaskList
+        taskList={taskList}
+        changeTaskList={setTaskList}
+        openModal={openModal}
+      />
+      {modal && <Modal onCloseModal={onCloseModal} modalObj={modalObj} />}
+    </div>
+  );
 }
 
 export default App;

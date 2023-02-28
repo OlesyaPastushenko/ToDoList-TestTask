@@ -1,25 +1,36 @@
 import React, { useState } from "react";
-import MyButton from "./MyButton";
-import '../App.css'
-const TaskList = ({taskList, changeTaskList}) =>{
-    const Done = (eTarget) => {
-        let list = taskList.map(elem =>{
-            return elem.id !== eTarget ? elem : {...elem, done: true}
-        })
-        changeTaskList(list)
-        localStorage.setItem('task',JSON.stringify(list))
-    }
-    return ( 
-        <div>
-        {taskList?.map((el, index) => 
-            <div key = {el.id} id ={el.id} className='task'>
-            <div style={{textDecoration: el.done && 'line-through'}} id ={el.id}>{index+1}. {el.title}</div>
-            <MyButton id={el.id} onClick = {()=> Done(el.id)}>Done</MyButton>
-            </div> 
-            )}
-        </div>
-    
-    )
+import "../App.css";
 
-}
-export default TaskList
+const TaskList = ({ taskList, changeTaskList, openModal}) => {
+  const Done = (eTarget) => {
+    let list = taskList.map((elem) => {
+      return elem.id !== eTarget ? elem : { ...elem, done: !elem.done };
+    });
+    changeTaskList(list);
+    localStorage.setItem("task", JSON.stringify(list));
+  };
+  return (
+    <div>
+      {taskList?.map((el, index) => (
+        <div key={el.id} id={el.id} className='taskWrap'>
+          <div
+            className="task"
+            style={{boxShadow: el.done &&  "0px 1px 2px rgba(0, 0, 0, 0.2)"}}
+            id={el.id}
+            onClick={()=>openModal(el.id)}
+          >
+            <span className="id">{el.id} / {index+1}</span>
+            <span className="title" style={{ textDecoration: el.done && "line-through"}}>{el.title}</span>
+            <span className="desc" style={{ textDecoration: el.done && "line-through"}}>{el.task}</span>
+          </div>
+          <div className="btnWrap">
+          <button className={el.done ? "doneTrue" : "btnDone"} id={el.id} onClick={() => Done(el.id)}>
+             &#10003;
+          </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+export default TaskList;
