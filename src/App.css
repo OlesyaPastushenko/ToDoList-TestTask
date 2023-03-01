@@ -95,6 +95,7 @@
    display: flex;
    align-items: center;
    justify-content: center;
+   cursor: pointer;
 }
 .doneTrue {
    width: 30px;
@@ -108,7 +109,7 @@
    display: flex;
    align-items: center;
    justify-content: center;
-
+   cursor: pointer;
 }
 .clearWrap {
     display: flex;
