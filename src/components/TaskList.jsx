@@ -19,9 +19,9 @@ const TaskList = ({ taskList, changeTaskList, openModal}) => {
             id={el.id}
             onClick={()=>openModal(el.id)}
           >
-            <span className="id">{el.id} / {index+1}</span>
-            <span className="title" style={{ textDecoration: el.done && "line-through"}}>{el.title}</span>
-            <span className="desc" style={{ textDecoration: el.done && "line-through"}}>{el.task}</span>
+            <span className="id">{el.id}</span>
+            <span className="title">{el.title}</span>
+            <span className="desc">{el.task}</span>
           </div>
           <div className="btnWrap">
           <button className={el.done ? "doneTrue" : "btnDone"} id={el.id} onClick={() => Done(el.id)}>

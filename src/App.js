@@ -9,23 +9,27 @@ function App() {
   const [taskList, setTaskList] = useState([]);
   const [modal, setModal] = useState(false);
   const [modalObj, seModalObj] = useState([]);
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    let oldTasks = JSON.parse(localStorage.getItem("task"));
-    !oldTasks ? localStorage.setItem("task", JSON.stringify([])):
-      setTaskList(oldTasks)
-  }, []);
-
-  const onClearAll = () => {
-    setTaskList([]);
-  };
+  const [errorTitle, setErrorTitle] = useState('')
+  const [errorDesc, setErrorDesc] = useState('')
+  const [count, setCount] = useState(1)
 
   const addNewTask = (e) => {
     e.preventDefault();
-    if (title.trim().length > 0 && task.trim().length > 0) { 
+    if (title.trim().length < 1 && task.trim().length < 1){
+      setErrorTitle("This field is empty!")
+      setErrorDesc("This field is empty!")
+    }
+    else if (title.trim().length < 1) {
+      setErrorTitle("This field is empty!")
+    }
+    else if (task.trim().length < 1) {
+      setErrorDesc("This field is empty!")
+      return
+    }
+    else { 
+    setCount(count=>count+1)
     const NewTask = {
-      id: Date.now(),
+      id: count,
       title: title,
       task: task,
       done: false,
@@ -33,10 +37,7 @@ function App() {
     setTaskList([...taskList, NewTask]);
     setTask("");
     setTitle("");
-    localStorage.setItem("task", JSON.stringify(taskList));
-  } else {
-     setError("The filds should not be empty!")
-  }
+  } 
   };
 
   const openModal = (id) => {
@@ -52,24 +53,30 @@ function App() {
   return (
     <div className="wrap">
       <form className="form" onSubmit={addNewTask}>
+        <div>
         <input
-          onFocus={()=> setError('')}
-          required
+          onFocus={()=> setErrorTitle('')}
           placeholder="What's your task title?"
           className="input"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          style={{borderColor: errorTitle && "red"}}
         />
+        <p>{errorTitle}</p>
+        </div>
+        <div>
         <input
-          onFocus={()=> setError('')}
-          required
+          onFocus={()=> setErrorDesc('')}
           placeholder="What's your task today?"
           className="input"
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          style={{borderColor: errorDesc && "red"}}
         />
+        <p>{errorDesc}</p>
+        </div>
         <input
           className="button"
           type="submit"
@@ -77,12 +84,6 @@ function App() {
           value="Add task"
         />
       </form>
-      <div className="clearWrap">
-        <p>{error}</p>
-        <button className="button" onClick={onClearAll}>
-          Clear all
-        </button>
-      </div>
       <div className="table">
         <span>ID/number</span>
         <span>Title</span>
