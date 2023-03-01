@@ -3,10 +3,13 @@ const Modal = ({onCloseModal, modalObj}) => {
     return(
         <div className="modalBackground">
             <div className="modal">
-            <p>Id: {modalObj.id}</p>
-            <p>Title: {modalObj.title}</p>
-            <p>Description: {modalObj.task}</p>
-            <p>Status: {modalObj.done ? "done" : "not done"}</p>
+            <h2>{modalObj.title}</h2>
+            <div className="modalInfoWrap">
+            <br></br>
+            <h3>Description:</h3>
+            <p> {modalObj.task}</p>
+            <div>Status: <p className={modalObj.done ? "doneTrue" : "btnDone"}>&#10003;</p></div>
+            </div>
             <button className="button" onClick={onCloseModal}>Close</button>
             </div>
         </div>

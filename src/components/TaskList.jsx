@@ -11,7 +11,7 @@ const TaskList = ({ taskList, changeTaskList, openModal}) => {
   };
   return (
     <div>
-      {taskList?.map((el, index) => (
+      {taskList?.map((el) => (
         <div key={el.id} id={el.id} className='taskWrap'>
           <div
             className="task"
